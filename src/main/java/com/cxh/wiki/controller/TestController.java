@@ -1,6 +1,8 @@
 package com.cxh.wiki.controller;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class TestController {
@@ -11,7 +13,6 @@ public class TestController {
      *
      * /user?id=1
      * /user/1
-     * @return
      */
 //    @GetMapping("/hello")
 //    @PostMapping
@@ -22,5 +23,10 @@ public class TestController {
     @GetMapping("/hello")
     public String hello(){
         return "Hello World!";
+    }
+
+    @PostMapping("/hello/post")
+    public String hello(String name){
+        return "Hello World! Post, " + name;
     }
 }
