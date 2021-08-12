@@ -1,13 +1,15 @@
 package com.cxh.wiki.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class TestController {
-    //"http://127.0.0.1:8080/hello"
 
+    @Value("${test.hello:TEST}")
+    private String testHello;
     /**
      * GET,POST,PUT,DELETE
      *
@@ -22,7 +24,7 @@ public class TestController {
 //    @RequestMapping(value = "/user/1",method = RequestMethod.DELETE)
     @GetMapping("/hello")
     public String hello(){
-        return "Hello World!";
+        return "Hello World!" + testHello;
     }
 
     @PostMapping("/hello/post")

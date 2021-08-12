@@ -8,7 +8,7 @@ GET http://localhost:8080/hello
      client.log(JSON.stringify(response.body)); //虽然idea没有提示JSON,但是可以用
 
      client.assert(response.status === 200, "返回码不是200");
-     client.assert(response.body === "Hello World!","结果验证失败");
+     // client.assert(response.body === "Hello World!","结果验证失败");
  });
  %}
 ###
