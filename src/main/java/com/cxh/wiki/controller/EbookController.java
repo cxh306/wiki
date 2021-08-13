@@ -1,7 +1,8 @@
 package com.cxh.wiki.controller;
 
-import com.cxh.wiki.domain.Ebook;
+import com.cxh.wiki.req.EbookReq;
 import com.cxh.wiki.resp.CommonResp;
+import com.cxh.wiki.resp.EbookResp;
 import com.cxh.wiki.service.EbookService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,9 +18,9 @@ public class EbookController {
     private EbookService ebookService;
 
     @GetMapping("/list")
-    public CommonResp list(){
-        CommonResp<List<Ebook>> resp = new CommonResp<>();
-        List<Ebook> list = ebookService.list();
+    public CommonResp list(EbookReq req){
+        CommonResp<List<EbookResp>> resp = new CommonResp<>();
+        List<EbookResp> list = ebookService.list(req);
         resp.setContent(list);
         return resp;
     }
