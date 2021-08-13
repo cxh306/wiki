@@ -16,6 +16,6 @@ GET http://localhost:8080/hello
 POST http://localhost:8080/hello/post
 Content-Type: application/x-www-form-urlencoded
 
-name=TEST1
+name=TEST
 
 ###
