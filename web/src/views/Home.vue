@@ -9,7 +9,7 @@
       >
         <a-sub-menu key="sub1">
           <template #title>
-            <span><user-outline />subnav 1111</span>
+            <span><user-outline />subnav 1</span>
           </template>
           <a-menu-item key="1">
             option1
@@ -26,7 +26,7 @@
         </a-sub-menu>
         <a-sub-menu key="sub2">
           <template #title>
-            <span><user-outline />subnav 11</span>
+            <span><user-outline />subnav 2</span>
           </template>
           <a-menu-item key="5">
             option5
@@ -43,7 +43,7 @@
         </a-sub-menu>
         <a-sub-menu key="sub3">
           <template #title>
-            <span><user-outline />subnav 11</span>
+            <span><user-outline />subnav 3</span>
           </template>
           <a-menu-item key="9">
             option9
