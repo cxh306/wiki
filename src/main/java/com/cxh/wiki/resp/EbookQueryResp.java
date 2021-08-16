@@ -1,9 +1,6 @@
-package com.cxh.wiki.domain;
+package com.cxh.wiki.resp;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-
-public class Ebook {
+public class EbookQueryResp {
 
     private Long id;
 
@@ -22,6 +19,21 @@ public class Ebook {
     private Integer viewCount;
 
     private Integer voteCount;
+
+    @Override
+    public String toString() {
+        return "EbookQueryResp{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", category1Id=" + category1Id +
+                ", category2Id=" + category2Id +
+                ", description='" + description + '\'' +
+                ", cover='" + cover + '\'' +
+                ", docCount=" + docCount +
+                ", viewCount=" + viewCount +
+                ", voteCount=" + voteCount +
+                '}';
+    }
 
     public Long getId() {
         return id;
@@ -93,24 +105,5 @@ public class Ebook {
 
     public void setVoteCount(Integer voteCount) {
         this.voteCount = voteCount;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", category1Id=").append(category1Id);
-        sb.append(", category2Id=").append(category2Id);
-        sb.append(", description=").append(description);
-        sb.append(", cover=").append(cover);
-        sb.append(", docCount=").append(docCount);
-        sb.append(", viewCount=").append(viewCount);
-        sb.append(", voteCount=").append(voteCount);
-        sb.append("]");
-        return sb.toString();
     }
 }

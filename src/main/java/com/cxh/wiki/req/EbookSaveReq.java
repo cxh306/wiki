@@ -1,6 +1,7 @@
-package com.cxh.wiki.resp;
+package com.cxh.wiki.req;
 
-public class EbookResp {
+public class EbookSaveReq {
+    private Long id;
 
     private String name;
 
@@ -18,18 +19,12 @@ public class EbookResp {
 
     private Integer voteCount;
 
-    @Override
-    public String toString() {
-        return "EbookResp{" +
-                "name='" + name + '\'' +
-                ", category1Id=" + category1Id +
-                ", category2Id=" + category2Id +
-                ", description='" + description + '\'' +
-                ", cover='" + cover + '\'' +
-                ", docCount=" + docCount +
-                ", viewCount=" + viewCount +
-                ", voteCount=" + voteCount +
-                '}';
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -94,5 +89,20 @@ public class EbookResp {
 
     public void setVoteCount(Integer voteCount) {
         this.voteCount = voteCount;
+    }
+
+    @Override
+    public String toString() {
+        return "EbookSaveReq{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", category1Id=" + category1Id +
+                ", category2Id=" + category2Id +
+                ", description='" + description + '\'' +
+                ", cover='" + cover + '\'' +
+                ", docCount=" + docCount +
+                ", viewCount=" + viewCount +
+                ", voteCount=" + voteCount +
+                '}';
     }
 }
