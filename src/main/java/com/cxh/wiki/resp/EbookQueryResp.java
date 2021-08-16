@@ -1,5 +1,6 @@
 package com.cxh.wiki.resp;
 
+
 public class EbookQueryResp {
 
     private Long id;

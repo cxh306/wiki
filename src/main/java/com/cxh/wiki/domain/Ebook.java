@@ -1,7 +1,5 @@
 package com.cxh.wiki.domain;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 
 public class Ebook {
 
