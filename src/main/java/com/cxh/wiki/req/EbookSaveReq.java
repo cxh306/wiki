@@ -13,11 +13,11 @@ public class EbookSaveReq {
 
     private String cover;
 
-    private Integer docCount;
+    private int docCount;
 
-    private Integer viewCount;
+    private int viewCount;
 
-    private Integer voteCount;
+    private int voteCount;
 
     public Long getId() {
         return id;
@@ -67,27 +67,27 @@ public class EbookSaveReq {
         this.cover = cover;
     }
 
-    public Integer getDocCount() {
+    public int getDocCount() {
         return docCount;
     }
 
-    public void setDocCount(Integer docCount) {
+    public void setDocCount(int docCount) {
         this.docCount = docCount;
     }
 
-    public Integer getViewCount() {
+    public int getViewCount() {
         return viewCount;
     }
 
-    public void setViewCount(Integer viewCount) {
+    public void setViewCount(int viewCount) {
         this.viewCount = viewCount;
     }
 
-    public Integer getVoteCount() {
+    public int getVoteCount() {
         return voteCount;
     }
 
-    public void setVoteCount(Integer voteCount) {
+    public void setVoteCount(int voteCount) {
         this.voteCount = voteCount;
     }
 
