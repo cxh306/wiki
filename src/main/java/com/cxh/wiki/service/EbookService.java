@@ -6,6 +6,11 @@ import com.cxh.wiki.mapper.EbookMapper;
 import com.cxh.wiki.req.EbookReq;
 import com.cxh.wiki.resp.EbookResp;
 import com.cxh.wiki.util.CopyUtil;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -15,7 +20,7 @@ import java.util.List;
 
 @Service
 public class EbookService {
-
+    private static final Logger LOG = LoggerFactory.getLogger(EbookService.class);
     @Resource
     private EbookMapper ebookMapper;
 
@@ -25,8 +30,12 @@ public class EbookService {
         if(!ObjectUtils.isEmpty(req.getName())){
             criteria.andNameLike("%"+req.getName()+"%");
         }
-
+        PageHelper.startPage(1, 3);
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);//数据库字段对象Ebook
+
+        PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
+        LOG.info("总行数：{}", pageInfo.getTotal());
+        LOG.info("总页数：{}", pageInfo.getPages());
 
 //        List<EbookResp> respList = new ArrayList<>();//一些敏感字段不希望返回给前端,故创建排除敏感字段的类EbookResq
 //        for (Ebook ebook : ebookList) {
