@@ -7,6 +7,8 @@ import com.cxh.wiki.req.EbookReq;
 import com.cxh.wiki.resp.EbookResp;
 import com.cxh.wiki.util.CopyUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -20,7 +22,10 @@ public class EbookService {
     public List<EbookResp> list(EbookReq req){
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
-        criteria.andNameLike("%"+req.getName()+"%");
+        if(!ObjectUtils.isEmpty(req.getName())){
+            criteria.andNameLike("%"+req.getName()+"%");
+        }
+
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);//数据库字段对象Ebook
 
 //        List<EbookResp> respList = new ArrayList<>();//一些敏感字段不希望返回给前端,故创建排除敏感字段的类EbookResq
