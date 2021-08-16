@@ -7,29 +7,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CopyUtil {
-    public static <T> T copy(Object source,Class<T> clazz){
-        if(source == null){
+
+    /**
+     * 单体复制
+     */
+    public static <T> T copy(Object source, Class<T> clazz) {
+        if (source == null) {
             return null;
         }
         T obj = null;
-        try{
+        try {
             obj = clazz.newInstance();
-        }catch (InstantiationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            return null;
         }
-        BeanUtils.copyProperties(source,obj);
+        BeanUtils.copyProperties(source, obj);
         return obj;
     }
 
-    public static <T> List<T> copyList(List source, Class<T> clazz){
+    /**
+     * 列表复制
+     */
+    public static <T> List<T> copyList(List source, Class<T> clazz) {
         List<T> target = new ArrayList<>();
-        //source==null或空集合
-        if(!CollectionUtils.isEmpty(source)){
-            for (Object o : source) {
-                T copy = copy(o, clazz);
-                target.add(copy);
+        if (!CollectionUtils.isEmpty(source)){
+            for (Object c: source) {
+                T obj = copy(c, clazz);
+                target.add(obj);
             }
         }
         return target;

@@ -12,13 +12,14 @@
     <artifactId>wiki</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>wiki</name>
-    <description>Jiawa Wiki</description>
+    <description>cxh Wiki</description>
 
     <properties>
         <java.version>1.8</java.version>
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -53,36 +54,12 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
-        <!--整合redis-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-websocket</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.70</version>
         </dependency>
 
-        <!-- pagehelper 插件-->
-        <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>1.2.13</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -90,17 +67,9 @@
             <scope>provided</scope>
         </dependency>
 
-
-        <!-- RocketMQ-->
-        <!--<dependency>-->
-        <!--    <groupId>org.apache.rocketmq</groupId>-->
-        <!--    <artifactId>rocketmq-spring-boot-starter</artifactId>-->
-        <!--    <version>2.0.2</version>-->
-        <!--</dependency>-->
     </dependencies>
 
     <build>
-        <finalName>/dist/${artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -127,9 +96,5 @@
             </plugin>
         </plugins>
     </build>
-
-
-
-
 
 </project>
