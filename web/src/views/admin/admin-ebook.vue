@@ -1,235 +1,76 @@
 <template>
   <a-layout>
+    <a-layout-sider width="200" style="background: #fff">
+      <a-menu
+          mode="inline"
+          :style="{ height: '100%', borderRight: 0 }"
+          @click="handleClick"
+      >
+        <a-menu-item key="welcome">
+          <router-link :to="'/'">
+            <MailOutlined />
+            <span>欢迎</span>
+          </router-link>
+        </a-menu-item>
+        <a-sub-menu v-for="item in level1" :key="item.id">
+          <template v-slot:title>
+            <span><user-outlined />{{item.name}}</span>
+          </template>
+          <a-menu-item v-for="child in item.children" :key="child.id">
+            <MailOutlined /><span>{{child.name}}</span>
+          </a-menu-item>
+        </a-sub-menu>
+      </a-menu>
+    </a-layout-sider>
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      <p>
-        <a-form layout="inline" :model="param">
-          <a-form-item>
-            <a-input v-model:value="param.name" placeholder="名称">
-            </a-input>
-          </a-form-item>
-          <a-form-item>
-            <a-button type="primary" @click="handleQuery({page: 1, size: pagination.pageSize})">
-              查询
-            </a-button>
-          </a-form-item>
-          <a-form-item>
-            <a-button type="primary" @click="add()">
-              新增
-            </a-button>
-          </a-form-item>
-        </a-form>
-      </p>
-      <a-table
-          :columns="columns"
-          :row-key="record => record.id"
-          :data-source="ebooks"
-          :pagination="pagination"
-          :loading="loading"
-          @change="handleTableChange"
-      >
-        <template #cover="{ text: cover }">
-          <img v-if="cover" :src="cover" alt="avatar" />
+      <a-list item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3 }" :data-source="ebooks">
+        <template #renderItem="{ item }">
+          <a-list-item key="item.name">
+            <template #actions>
+              <span v-for="{ type, text } in actions" :key="type">
+                <component v-bind:is="type" style="margin-right: 8px" />
+                {{ text }}
+              </span>
+            </template>
+            <a-list-item-meta :description="item.description">
+              <template #title>
+                <a :href="item.href">{{ item.name }}</a>
+              </template>
+              <template #avatar><a-avatar :src="item.cover"/></template>
+            </a-list-item-meta>
+          </a-list-item>
         </template>
-        <template v-slot:category="{ text, record }">
-          <span>{{ getCategoryName(record.category1Id) }} / {{ getCategoryName(record.category2Id) }}</span>
-        </template>
-        <template v-slot:action="{ text, record }">
-          <a-space size="small">
-            <a-button type="primary" @click="edit(record)">
-              编辑
-            </a-button>
-            <a-popconfirm
-                title="删除后不可恢复，确认删除?"
-                ok-text="是"
-                cancel-text="否"
-                @confirm="handleDelete(record.id)"
-            >
-              <a-button type="danger">
-                删除
-              </a-button>
-            </a-popconfirm>
-          </a-space>
-        </template>
-      </a-table>
+      </a-list>
     </a-layout-content>
   </a-layout>
-
-  <a-modal
-      title="电子书表单"
-      v-model:visible="modalVisible"
-      :confirm-loading="modalLoading"
-      @ok="handleModalOk"
-  >
-    <a-form :model="ebook" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
-      <a-form-item label="封面">
-        <a-input v-model:value="ebook.cover" />
-      </a-form-item>
-      <a-form-item label="名称">
-        <a-input v-model:value="ebook.name" />
-      </a-form-item>
-      <a-form-item label="分类">
-        <a-cascader
-            v-model:value="categoryIds"
-            :field-names="{ label: 'name', value: 'id', children: 'children' }"
-            :options="level1"
-        />
-      </a-form-item>
-      <a-form-item label="描述">
-        <a-input v-model:value="ebook.description" type="textarea" />
-      </a-form-item>
-    </a-form>
-  </a-modal>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, onMounted, ref, reactive, toRef } from 'vue';
 import axios from 'axios';
 import { message } from 'ant-design-vue';
 import {Tool} from "@/util/tool";
 
+// const listData: any = [];
+// for (let i = 0; i < 23; i++) {
+//   listData.push({
+//     href: 'https://www.antdv.com/',
+//     title: `ant design vue part ${i}`,
+//     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+//     description:
+//         'Ant Design, a design language for background applications, is refined by Ant UED Team.',
+//     content:
+//         'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
+//   });
+// }
+
 export default defineComponent({
-  name: 'AdminEbook',
+  name: 'Home',
   setup() {
-    const param = ref();
-    param.value = {};
     const ebooks = ref();
-    const pagination = ref({
-      current: 1,
-      pageSize: 10,
-      total: 0
-    });
-    const loading = ref(false);
-
-    const columns = [
-      {
-        title: '封面',
-        dataIndex: 'cover',
-        slots: { customRender: 'cover' }
-      },
-      {
-        title: '名称',
-        dataIndex: 'name'
-      },
-      {
-        title: '分类',
-        slots: { customRender: 'category' }
-      },
-      {
-        title: '文档数',
-        dataIndex: 'docCount'
-      },
-      {
-        title: '阅读数',
-        dataIndex: 'viewCount'
-      },
-      {
-        title: '点赞数',
-        dataIndex: 'voteCount'
-      },
-      {
-        title: 'Action',
-        key: 'action',
-        slots: { customRender: 'action' }
-      }
-    ];
-
-    /**
-     * 数据查询
-     **/
-    const handleQuery = (params: any) => {
-      loading.value = true;
-      axios.get("/ebook/list", {
-        params: {
-          page: params.page,
-          size: params.size,
-          name: param.value.name
-        }
-      }).then((response) => {
-        loading.value = false;
-        const data = response.data;
-        if (data.success) {
-          ebooks.value = data.content.list;
-
-          // 重置分页按钮
-          pagination.value.current = params.page;
-          pagination.value.total = data.content.total;
-        } else {
-          message.error(data.message);
-        }
-      });
-    };
-
-    /**
-     * 表格点击页码时触发
-     */
-    const handleTableChange = (pagination: any) => {
-      console.log("看看自带的分页参数都有啥：" + pagination);
-      handleQuery({
-        page: pagination.current,
-        size: pagination.pageSize
-      });
-    };
-
-    // -------- 表单 ---------
-    /**
-     * 数组，[100, 101]对应：前端开发 / Vue
-     */
-    const categoryIds = ref();
-    const ebook = ref();
-    const modalVisible = ref(false);
-    const modalLoading = ref(false);
-    const handleModalOk = () => {
-      modalLoading.value = true;
-      ebook.value.category1Id = categoryIds.value[0];
-      ebook.value.category2Id = categoryIds.value[1];
-      axios.post("/ebook/save", ebook.value).then((response) => {
-        modalLoading.value = false;
-        const data = response.data; // data = commonResp
-        if (data.success) {
-          modalVisible.value = false;
-
-          // 重新加载列表
-          handleQuery({
-            page: pagination.value.current,
-            size: pagination.value.pageSize,
-          });
-        } else {
-          message.error(data.message);
-        }
-      });
-    };
-
-    /**
-     * 编辑
-     */
-    const edit = (record: any) => {
-      modalVisible.value = true;
-      ebook.value = Tool.copy(record);
-      categoryIds.value = [ebook.value.category1Id, ebook.value.category2Id]
-    };
-
-    /**
-     * 新增
-     */
-    const add = () => {
-      modalVisible.value = true;
-      ebook.value = {};
-    };
-
-    const handleDelete = (id: number) => {
-      axios.delete("/ebook/delete/" + id).then((response) => {
-        const data = response.data; // data = commonResp
-        if (data.success) {
-          // 重新加载列表
-          handleQuery({
-            page: pagination.value.current,
-            size: pagination.value.pageSize,
-          });
-        }
-      });
-    };
+    // const ebooks1 = reactive({books: []});
 
     const level1 =  ref();
     let categorys: any;
@@ -237,9 +78,7 @@ export default defineComponent({
      * 查询所有分类
      **/
     const handleQueryCategory = () => {
-      loading.value = true;
       axios.get("/category/all").then((response) => {
-        loading.value = false;
         const data = response.data;
         if (data.success) {
           categorys = data.content;
@@ -254,55 +93,53 @@ export default defineComponent({
       });
     };
 
-    const getCategoryName = (cid: number) => {
-      // console.log(cid)
-      let result = "";
-      categorys.forEach((item: any) => {
-        if (item.id === cid) {
-          // return item.name; // 注意，这里直接return不起作用
-          result = item.name;
-        }
-      });
-      return result;
+    const handleClick = () => {
+      console.log("menu click")
     };
 
     onMounted(() => {
       handleQueryCategory();
-      handleQuery({
-        page: 1,
-        size: pagination.value.pageSize,
+      axios.get("/ebook/list", {
+        params: {
+          page: 1,
+          size: 1000
+        }
+      }).then((response) => {
+        const data = response.data;
+        ebooks.value = data.content.list;
+        // ebooks1.books = data.content;
       });
     });
 
     return {
-      param,
       ebooks,
-      pagination,
-      columns,
-      loading,
-      handleTableChange,
-      handleQuery,
-      getCategoryName,
+      // ebooks2: toRef(ebooks1, "books"),
+      // listData,
+      pagination: {
+        onChange: (page: any) => {
+          console.log(page);
+        },
+        pageSize: 3,
+      },
+      actions: [
+        { type: 'StarOutlined', text: '156' },
+        { type: 'LikeOutlined', text: '156' },
+        { type: 'MessageOutlined', text: '2' },
+      ],
 
-      edit,
-      add,
-
-      ebook,
-      modalVisible,
-      modalLoading,
-      handleModalOk,
-      categoryIds,
+      handleClick,
       level1,
-
-      handleDelete
     }
   }
 });
 </script>
 
 <style scoped>
-img {
+.ant-avatar {
   width: 50px;
   height: 50px;
+  line-height: 50px;
+  border-radius: 8%;
+  margin: 5px 0;
 }
 </style>
