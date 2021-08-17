@@ -1,5 +1,7 @@
 package com.cxh.wiki.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.cxh.wiki.domain.Ebook;
 import com.cxh.wiki.domain.EbookExample;
 import com.cxh.wiki.mapper.EbookMapper;
@@ -8,10 +10,7 @@ import com.cxh.wiki.req.EbookSaveReq;
 import com.cxh.wiki.resp.EbookQueryResp;
 import com.cxh.wiki.resp.PageResp;
 import com.cxh.wiki.util.CopyUtil;
-
 import com.cxh.wiki.util.SnowFlake;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -36,6 +35,9 @@ public class EbookService {
         EbookExample.Criteria criteria = ebookExample.createCriteria();
         if (!ObjectUtils.isEmpty(req.getName())) {
             criteria.andNameLike("%" + req.getName() + "%");
+        }
+        if (!ObjectUtils.isEmpty(req.getCategoryId2())) {
+            criteria.andCategory2IdEqualTo(req.getCategoryId2());
         }
         PageHelper.startPage(req.getPage(), req.getSize());
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
@@ -82,6 +84,4 @@ public class EbookService {
     public void delete(Long id) {
         ebookMapper.deleteByPrimaryKey(id);
     }
-
 }
-
