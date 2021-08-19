@@ -35,11 +35,22 @@ public class DocService {
     @Resource
     private SnowFlake snowFlake;
 
+    public List<DocQueryResp> all(Long ebookId) {
+        DocExample docExample = new DocExample();
+        docExample.createCriteria().andEbookIdEqualTo(ebookId);
+        docExample.setOrderByClause("sort asc");
+        List<Doc> docList = docMapper.selectByExample(docExample);
+
+        // 列表复制
+        List<DocQueryResp> list = CopyUtil.copyList(docList, DocQueryResp.class);
+
+        return list;
+    }
+
     public PageResp<DocQueryResp> list(DocQueryReq req) {
         DocExample docExample = new DocExample();
         docExample.setOrderByClause("sort asc");
-//        DocExample.Criteria criteria = docExample.createCriteria();
-
+        DocExample.Criteria criteria = docExample.createCriteria();
         PageHelper.startPage(req.getPage(), req.getSize());
         List<Doc> docList = docMapper.selectByExample(docExample);
 
@@ -66,19 +77,6 @@ public class DocService {
 
         return pageResp;
     }
-
-    public List<DocQueryResp> all() {
-        DocExample docExample = new DocExample();
-        docExample.setOrderByClause("sort asc");
-        List<Doc> docList = docMapper.selectByExample(docExample);
-
-        // 列表复制
-        List<DocQueryResp> list = CopyUtil.copyList(docList, DocQueryResp.class);
-
-
-        return list;
-    }
-
 
     /**
      * 保存
@@ -114,10 +112,10 @@ public class DocService {
         docMapper.deleteByExample(docExample);
     }
 
-    public String findContent(Long id){
-        Content content= contentMapper.selectByPrimaryKey(id);
-        return content==null?"":content.getContent();
+    public String findContent(Long id) {
+        Content content = contentMapper.selectByPrimaryKey(id);
+        return content.getContent();
     }
-
 }
+
 
